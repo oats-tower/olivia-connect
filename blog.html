@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Blog — Olivia Connect</title>
+  <meta name="description" content="Insights on receipt OCR, document parsing, and building better data pipelines for Philippine businesses.">
+  <link rel="icon" type="image/png" href="../images/olivia.png">
+  <link rel="stylesheet" href="../styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <nav class="navbar">
+    <div class="container">
+      <div class="logo">
+        <a href="/"><img src="../images/Olivia Connect_colored.svg" alt="Olivia Connect Logo"></a>
+      </div>
+      <div class="nav-links">
+        <a href="/#overview">Overview</a>
+        <a href="/#use-cases">Use Cases</a>
+        <a href="/#developer">Developer</a>
+        <a href="/blog" class="nav-active">Blog</a>
+      </div>
+      <div class="nav-buttons">
+        <a href="/#cta" class="btn btn-primary">Book Evaluation</a>
+      </div>
+      <button class="mobile-menu-btn" aria-label="Toggle menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <div class="blog-listing-page">
+    <header class="blog-listing-header">
+      <div class="container">
+        <p class="kicker">Olivia Connect Blog</p>
+        <h1>Insights on receipt parsing, OCR, and data pipelines.</h1>
+        <div class="blog-tag-filter" id="tagFilter"></div>
+      </div>
+    </header>
+
+    <main class="container">
+      <div id="blogGrid" class="blog-grid">
+        <div class="blog-skeleton"></div>
+        <div class="blog-skeleton"></div>
+        <div class="blog-skeleton"></div>
+      </div>
+      <p id="blogEmpty" class="blog-empty hidden">No posts published yet. Check back soon.</p>
+    </main>
+  </div>
+
+  <footer>
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-col">
+          <img src="../images/Olivia Connect_colored.svg" alt="Olivia Connect" class="footer-logo">
+          <p>Advanced AI-powered document processing for Philippine businesses.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Company</h4>
+          <ul>
+            <li><a href="/about">About Us</a></li>
+            <li><a href="/blog">Blog</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Legal</h4>
+          <ul>
+            <li><a href="/privacy-policy">Privacy Policy</a></li>
+            <li><a href="/terms-conditions">Terms &amp; Conditions</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2026 Olivia Technology Group. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="/supabase-config.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    const sb = supabase.createClient(window.SUPABASE_URL, window.SUPABASE_ANON);
+
+    const grid      = document.getElementById('blogGrid');
+    const empty     = document.getElementById('blogEmpty');
+    const tagFilter = document.getElementById('tagFilter');
+    let allPosts = [];
+    let activeTag = null;
+
+    async function loadPosts() {
+      const { data, error } = await sb
+        .from('blog_posts')
+        .select('id, title, slug, tags, hero_image_url, body, created_at')
+        .eq('status', 'published')
+        .order('created_at', { ascending: false });
+
+      if (error || !data) {
+        grid.innerHTML = '<p class="blog-error">Could not load posts. Please try again later.</p>';
+        return;
+      }
+
+      allPosts = data;
+      buildTagFilter(data);
+      renderPosts(data);
+    }
+
+    function buildTagFilter(posts) {
+      const tags = [...new Set(posts.flatMap(p => p.tags || []))].sort();
+      if (!tags.length) return;
+      tagFilter.innerHTML = tags.map(t =>
+        `<button class="tag-btn" data-tag="${t}">${t}</button>`
+      ).join('');
+      tagFilter.querySelectorAll('.tag-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          if (activeTag === btn.dataset.tag) {
+            activeTag = null;
+            tagFilter.querySelectorAll('.tag-btn').forEach(b => b.classList.remove('active'));
+            renderPosts(allPosts);
+          } else {
+            activeTag = btn.dataset.tag;
+            tagFilter.querySelectorAll('.tag-btn').forEach(b => b.classList.toggle('active', b.dataset.tag === activeTag));
+            renderPosts(allPosts.filter(p => (p.tags || []).includes(activeTag)));
+          }
+        });
+      });
+    }
+
+    function renderPosts(posts) {
+      if (!posts.length) {
+        grid.innerHTML = '';
+        empty.classList.remove('hidden');
+        return;
+      }
+      empty.classList.add('hidden');
+      grid.innerHTML = posts.map(post => {
+        const date = new Date(post.created_at).toLocaleDateString('en-PH', { year: 'numeric', month: 'long', day: 'numeric' });
+        const excerpt = post.body ? post.body.replace(/<[^>]+>/g, '').slice(0, 160) + '…' : '';
+        const hero = post.hero_image_url
+          ? `<img src="${post.hero_image_url}" alt="${escHtml(post.title)}" class="blog-card-hero">`
+          : `<div class="blog-card-hero blog-card-hero-placeholder"></div>`;
+        const tags = (post.tags || []).map(t => `<span class="blog-tag">${escHtml(t)}</span>`).join('');
+        return `
+          <a href="/blog/${post.slug}" class="blog-card">
+            ${hero}
+            <div class="blog-card-body">
+              ${tags ? `<div class="blog-card-tags">${tags}</div>` : ''}
+              <h2 class="blog-card-title">${escHtml(post.title)}</h2>
+              <p class="blog-card-excerpt">${escHtml(excerpt)}</p>
+              <span class="blog-card-date">${date}</span>
+            </div>
+          </a>`;
+      }).join('');
+    }
+
+    function escHtml(str) {
+      return String(str).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+    }
+
+    loadPosts();
+  </script>
+</body>
+</html>

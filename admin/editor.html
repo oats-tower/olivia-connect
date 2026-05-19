@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Editor — Olivia Connect Admin</title>
+  <link rel="icon" type="image/png" href="/images/olivia.png">
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/quill@2/dist/quill.snow.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="admin-body">
+
+  <div class="admin-layout">
+    <header class="admin-topbar">
+      <div class="admin-topbar-inner">
+        <a href="/admin/dashboard.html" class="admin-logo">
+          <img src="/images/Olivia Connect_colored.svg" alt="Olivia Connect" height="28">
+          <span>Admin</span>
+        </a>
+        <div class="admin-topbar-actions">
+          <button id="saveDraftBtn" class="btn btn-secondary btn-sm">Save Draft</button>
+          <button id="publishBtn"   class="btn btn-primary btn-sm">Publish</button>
+          <button id="signOutBtn"   class="btn btn-ghost btn-sm">Sign Out</button>
+        </div>
+      </div>
+    </header>
+
+    <main class="admin-main">
+      <div class="editor-layout">
+
+        <!-- Left: content fields -->
+        <div class="editor-main">
+          <div class="form-group">
+            <label for="postTitle">Title</label>
+            <input type="text" id="postTitle" class="editor-title-input" placeholder="Post title…">
+          </div>
+
+          <div class="form-group">
+            <label>Body</label>
+            <div id="quillEditor" class="quill-editor-wrap"></div>
+          </div>
+        </div>
+
+        <!-- Right: sidebar -->
+        <aside class="editor-sidebar">
+
+          <div class="editor-sidebar-section">
+            <h3>Status</h3>
+            <span id="statusBadge" class="status-badge status-draft">draft</span>
+          </div>
+
+          <div class="editor-sidebar-section">
+            <h3>Slug</h3>
+            <input type="text" id="postSlug" placeholder="auto-generated-from-title" class="input-sm">
+            <p class="field-hint">URL: /blog/<span id="slugPreview">…</span></p>
+          </div>
+
+          <div class="editor-sidebar-section">
+            <h3>Tags</h3>
+            <input type="text" id="postTags" placeholder="ocr, receipts, api" class="input-sm">
+            <p class="field-hint">Comma-separated</p>
+          </div>
+
+          <div class="editor-sidebar-section">
+            <h3>Hero Image</h3>
+            <div id="heroPreviewWrap" class="hero-preview-wrap hidden">
+              <img id="heroPreview" src="" alt="Hero preview" class="hero-preview-img">
+              <button id="removeHeroBtn" class="btn btn-ghost btn-sm btn-block">Remove</button>
+            </div>
+            <label for="heroUpload" class="btn btn-secondary btn-block" id="heroUploadLabel">Upload Image</label>
+            <input type="file" id="heroUpload" accept="image/*" class="hidden">
+            <p id="heroUploadStatus" class="field-hint"></p>
+          </div>
+
+          <div class="editor-sidebar-actions">
+            <button id="saveDraftBtn2" class="btn btn-secondary btn-block">Save Draft</button>
+            <button id="publishBtn2"   class="btn btn-primary btn-block">Publish</button>
+          </div>
+
+          <p id="saveStatus" class="save-status"></p>
+        </aside>
+
+      </div>
+    </main>
+  </div>
+
+  <script src="/supabase-config.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://cdn.jsdelivr.net/npm/quill@2/dist/quill.js"></script>
+  <script>
+    const sb = supabase.createClient(window.SUPABASE_URL, window.SUPABASE_ANON);
+
+    // ── Auth guard ──
+    let currentUser = null;
+    sb.auth.getSession().then(({ data }) => {
+      if (!data.session) { location.replace('/admin/index.html'); return; }
+      currentUser = data.session.user;
+    });
+    document.getElementById('signOutBtn').addEventListener('click', async () => {
+      await sb.auth.signOut();
+      location.replace('/admin/index.html');
+    });
+
+    // ── Quill setup ──
+    const quill = new Quill('#quillEditor', {
+      theme: 'snow',
+      placeholder: 'Write your post here…',
+      modules: {
+        toolbar: {
+          container: [
+            [{ header: [1, 2, 3, false] }],
+            ['bold', 'italic', 'underline', 'strike'],
+            ['blockquote', 'code-block'],
+            [{ list: 'ordered' }, { list: 'bullet' }],
+            ['link', 'image'],
+            ['clean']
+          ],
+          handlers: { image: imageUploadHandler }
+        }
+      }
+    });
+
+    async function imageUploadHandler() {
+      const input = document.createElement('input');
+      input.setAttribute('type', 'file');
+      input.setAttribute('accept', 'image/*');
+      input.click();
+      input.onchange = async () => {
+        const file = input.files[0];
+        if (!file) return;
+        const ext  = file.name.split('.').pop();
+        const path = `inline/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
+        const { data, error } = await sb.storage.from('blog-images').upload(path, file, { upsert: false });
+        if (error) { alert('Image upload failed: ' + error.message); return; }
+        const { data: urlData } = sb.storage.from('blog-images').getPublicUrl(path);
+        const range = quill.getSelection(true);
+        quill.insertEmbed(range.index, 'image', urlData.publicUrl);
+        quill.setSelection(range.index + 1);
+      };
+    }
+
+    // ── State ──
+    let postId      = null;
+    let heroUrl     = null;
+    let postStatus  = 'draft';
+
+    // ── Load existing post if ?id= param present ──
+    const params = new URLSearchParams(location.search);
+    if (params.has('id')) {
+      postId = params.get('id');
+      (async () => {
+        const { data: post, error } = await sb.from('blog_posts').select('*').eq('id', postId).single();
+        if (error || !post) { alert('Post not found.'); location.replace('/admin/dashboard.html'); return; }
+        document.getElementById('postTitle').value = post.title || '';
+        document.getElementById('postSlug').value  = post.slug  || '';
+        document.getElementById('postTags').value  = (post.tags || []).join(', ');
+        document.getElementById('slugPreview').textContent = post.slug || '';
+        postStatus = post.status || 'draft';
+        updateStatusBadge();
+        quill.root.innerHTML = post.body || '';
+        if (post.hero_image_url) {
+          heroUrl = post.hero_image_url;
+          showHeroPreview(heroUrl);
+        }
+      })();
+    }
+
+    // ── Slug auto-generation ──
+    function slugify(text) {
+      return text.toLowerCase().trim().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+    }
+    document.getElementById('postTitle').addEventListener('input', (e) => {
+      const slugInput = document.getElementById('postSlug');
+      if (!postId || !slugInput.dataset.manual) {
+        const slug = slugify(e.target.value);
+        slugInput.value = slug;
+        document.getElementById('slugPreview').textContent = slug;
+      }
+    });
+    document.getElementById('postSlug').addEventListener('input', (e) => {
+      e.target.dataset.manual = '1';
+      document.getElementById('slugPreview').textContent = e.target.value;
+    });
+
+    // ── Hero image upload ──
+    document.getElementById('heroUpload').addEventListener('change', async (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      const statusEl = document.getElementById('heroUploadStatus');
+      statusEl.textContent = 'Uploading…';
+      const ext  = file.name.split('.').pop();
+      const path = `hero/${Date.now()}.${ext}`;
+      const { error } = await sb.storage.from('blog-images').upload(path, file, { upsert: true });
+      if (error) { statusEl.textContent = 'Upload failed: ' + error.message; return; }
+      const { data: urlData } = sb.storage.from('blog-images').getPublicUrl(path);
+      heroUrl = urlData.publicUrl;
+      statusEl.textContent = '';
+      showHeroPreview(heroUrl);
+    });
+    function showHeroPreview(url) {
+      document.getElementById('heroPreview').src = url;
+      document.getElementById('heroPreviewWrap').classList.remove('hidden');
+      document.getElementById('heroUploadLabel').textContent = 'Change Image';
+    }
+    document.getElementById('removeHeroBtn').addEventListener('click', () => {
+      heroUrl = null;
+      document.getElementById('heroPreviewWrap').classList.add('hidden');
+      document.getElementById('heroUploadLabel').textContent = 'Upload Image';
+      document.getElementById('heroUpload').value = '';
+    });
+
+    // ── Save ──
+    function updateStatusBadge() {
+      const badge = document.getElementById('statusBadge');
+      badge.textContent = postStatus;
+      badge.className = 'status-badge ' + (postStatus === 'published' ? 'status-published' : 'status-draft');
+    }
+
+    async function save(newStatus) {
+      const title  = document.getElementById('postTitle').value.trim();
+      const slug   = document.getElementById('postSlug').value.trim() || slugify(title);
+      const tagsRaw = document.getElementById('postTags').value;
+      const tags   = tagsRaw.split(',').map(t => t.trim()).filter(Boolean);
+      const body   = quill.root.innerHTML;
+      const status = newStatus || postStatus;
+
+      if (!title) { alert('Please enter a title.'); return; }
+      if (!slug)  { alert('Please enter a slug.');  return; }
+
+      const statusEl = document.getElementById('saveStatus');
+      statusEl.textContent = 'Saving…';
+      statusEl.className = 'save-status';
+
+      const payload = { title, slug, tags, body, status, hero_image_url: heroUrl || null };
+
+      let error;
+      if (postId) {
+        ({ error } = await sb.from('blog_posts').update(payload).eq('id', postId));
+      } else {
+        const res = await sb.from('blog_posts').insert(payload).select('id').single();
+        error = res.error;
+        if (res.data) {
+          postId = res.data.id;
+          // Update URL without reload
+          history.replaceState(null, '', `/admin/editor.html?id=${postId}`);
+        }
+      }
+
+      if (error) {
+        statusEl.textContent = 'Error: ' + error.message;
+        statusEl.className = 'save-status save-error';
+        return;
+      }
+      postStatus = status;
+      updateStatusBadge();
+      statusEl.textContent = status === 'published' ? 'Published ✓' : 'Saved as draft ✓';
+      statusEl.className = 'save-status save-ok';
+    }
+
+    document.getElementById('saveDraftBtn').addEventListener('click',  () => save('draft'));
+    document.getElementById('publishBtn').addEventListener('click',    () => save('published'));
+    document.getElementById('saveDraftBtn2').addEventListener('click', () => save('draft'));
+    document.getElementById('publishBtn2').addEventListener('click',   () => save('published'));
+  </script>
+</body>
+</html>

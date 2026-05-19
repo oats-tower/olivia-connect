@@ -1,0 +1,5 @@
+# Cloudflare Pages routing
+# Serves the SPA shell for admin and blog-post pages
+
+/admin/*    /admin/index.html    200
+/blog/:slug /blog-post.html      200

@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Olivia Connect — PH Receipt OCR for Engineering Teams</title>
+    <link rel="icon" type="image/png" href="../images/olivia.png">
+    <link rel="stylesheet" href="./styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="logo">
+                <a href="../"><img src="../images/Olivia Connect_colored.svg" alt="Olivia Connect Logo"></a>
+            </div>
+            <div class="nav-links">
+                <a href="#overview">Overview</a>
+                <a href="#use-cases">Use Cases</a>
+                <a href="#developer">Developer</a>
+                <a href="#faq">FAQ</a>
+            </div>
+            <div class="nav-buttons">
+                <a href="#cta" class="btn btn-primary">Book Evaluation</a>
+            </div>
+            <button class="mobile-menu-btn" aria-label="Toggle menu">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Tab Bar -->
+    <div class="page-tabs-bar">
+        <div class="container">
+            <button class="page-tab active" data-page="main">Product Overview</button>
+            <button class="page-tab" data-page="dev">Developer Guide</button>
+            <button class="page-tab" data-page="blog">Blog</button>
+        </div>
+    </div>
+
+    <!-- ===== PRODUCT OVERVIEW PAGE ===== -->
+    <div class="tab-page active" id="main">
+
+        <section class="hero">
+            <div class="container">
+                <div class="hero-grid">
+                    <div class="hero-content">
+                        <span class="eyebrow">Philippines Receipt OCR for Engineering Teams</span>
+                        <h1>PH Receipt OCR API for teams that need structured data, not raw text.</h1>
+                        <p class="hero-sub">Extract merchant, totals, VAT, dates, and line items from Philippine receipts and return workflow-ready JSON your product can use immediately.</p>
+                        <div class="hero-cta">
+                            <a href="#demo" class="btn btn-primary btn-large">Try Sample Receipt</a>
+                            <a href="#contact" class="btn btn-secondary btn-large">Talk to Team</a>
+                        </div>
+                    </div>
+                    <div class="demo-panel">
+                        <div class="demo-panel-head">
+                            <span>Receipt in</span>
+                            <span>Structured output out</span>
+                        </div>
+                        <div class="demo-panel-grid">
+                            <div class="receipt-mockup">
+                                <div class="receipt-line line-lg"></div>
+                                <div class="receipt-line line-md"></div>
+                                <div class="receipt-line line-sm"></div>
+                                <div class="receipt-line line-lg"></div>
+                                <div class="receipt-line line-md"></div>
+                                <div class="receipt-line line-lg"></div>
+                                <div class="receipt-line line-sm"></div>
+                                <div class="receipt-line line-md"></div>
+                                <div class="receipt-line line-lg"></div>
+                                <div class="receipt-line line-sm"></div>
+                            </div>
+                            <pre class="code-output">{
+  "merchant": "SM Hypermarket",
+  "country": "PH",
+  "date": "2026-04-18",
+  "subtotal": 1325.90,
+  "vat": 159.11,
+  "total": 1485.01,
+  "currency": "PHP",
+  "line_items": [
+    {
+      "desc": "Milk",
+      "qty": 2,
+      "amount": 220.00
+    },
+    {
+      "desc": "Rice",
+      "qty": 1,
+      "amount": 920.00
+    }
+  ]
+}</pre>
+                        </div>
+                    </div>
+                </div>
+                <div class="objection-block">
+                    <div class="objection-main">
+                        <div class="objection-icon">
+                            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                        </div>
+                        <strong>Your team can build OCR. The question is whether they should own receipt parsing in production.</strong>
+                        <p>Getting text from an image is only the start. Production receipt parsing means handling messy photos, VAT logic, line items, layout drift, retries, monitoring, exception handling, and ongoing tuning over time.</p>
+                    </div>
+                    <ul class="objection-bullets">
+                        <li>
+                            <span class="objection-bullet-icon">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                            </span>
+                            <span>Build in-house when full control matters most.</span>
+                        </li>
+                        <li>
+                            <span class="objection-bullet-icon">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                            </span>
+                            <span>Use the API when speed, stability, and lower maintenance matter more.</span>
+                        </li>
+                        <li>
+                            <span class="objection-bullet-icon">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+                            </span>
+                            <span>Evaluate with real PH receipts, not only a polished sample.</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="overview" class="content-section">
+            <div class="container">
+                <div class="section-head">
+                    <div>
+                        <p class="kicker">Why This Is Different</p>
+                        <h2>Specialized receipt parsing, not generic OCR text extraction.</h2>
+                    </div>
+                    <p class="section-desc">The value is in structured extraction — not just reading characters. Olivia Connect returns workflow-ready data your product can use immediately.</p>
+                </div>
+                <div class="cards-3">
+                    <div class="info-card">
+                        <h3>Structured Fields</h3>
+                        <p>Merchant name, dates, totals, subtotal, currency, VAT or tax values, and payment details in a stable, predictable format.</p>
+                    </div>
+                    <div class="info-card">
+                        <h3>Line-Item Parsing</h3>
+                        <p>Return products, quantities, and amounts in arrays that can feed reimbursements, expense claims, or finance logic directly.</p>
+                    </div>
+                    <div class="info-card">
+                        <h3>Workflow-Ready Output</h3>
+                        <p>Use parsed JSON directly in approval flows, ledgers, reconciliations, promotions validation, or internal systems.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="content-section alt-bg">
+            <div class="container">
+                <div class="section-head">
+                    <div>
+                        <p class="kicker">Build vs. Buy</p>
+                        <h2>Frame the decision fairly.</h2>
+                    </div>
+                    <p class="section-desc">The real trade-off is engineering ownership versus delivery speed and maintenance burden.</p>
+                </div>
+                <div class="table-wrap">
+                    <table class="compare-table">
+                        <thead>
+                            <tr>
+                                <th>Area</th>
+                                <th>Build In-House</th>
+                                <th>Use Olivia Connect API</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Control</td>
+                                <td>Full control over OCR, parsing rules, and deployment.</td>
+                                <td>Less infrastructure ownership, faster product implementation.</td>
+                            </tr>
+                            <tr>
+                                <td>Time to Launch</td>
+                                <td>Team builds extraction flow, validation, and monitoring.</td>
+                                <td>Integrate an existing endpoint and test quickly.</td>
+                            </tr>
+                            <tr>
+                                <td>Accuracy Ramp</td>
+                                <td>Early prototype may work, but real-world tuning takes time.</td>
+                                <td>Start with a service already shaped around receipt extraction.</td>
+                            </tr>
+                            <tr>
+                                <td>Maintenance</td>
+                                <td>Own retries, document drift, parser fixes, and QA.</td>
+                                <td>Reduce the maintenance tail and operational burden.</td>
+                            </tr>
+                            <tr>
+                                <td>Engineering Focus</td>
+                                <td>More time on parsing infrastructure.</td>
+                                <td>More time on product workflows and business logic.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <section id="use-cases" class="content-section">
+            <div class="container">
+                <div class="section-head">
+                    <div>
+                        <p class="kicker">Use Cases</p>
+                        <h2>Built for the workflows that matter.</h2>
+                    </div>
+                    <p class="section-desc">Structured receipt extraction applies across expense management, finance, loyalty programs, and internal tooling.</p>
+                </div>
+                <div class="cards-2">
+                    <div class="info-card">
+                        <h3>Expense &amp; Reimbursement</h3>
+                        <p>Speed up claims processing, field validation, and audit-friendly record creation across your organization.</p>
+                    </div>
+                    <div class="info-card">
+                        <h3>Accounting &amp; Finance Ops</h3>
+                        <p>Support bookkeeping, reconciliation, and finance workflows that rely on extracted totals, merchants, and taxes.</p>
+                    </div>
+                    <div class="info-card">
+                        <h3>Promotions &amp; Loyalty</h3>
+                        <p>Validate qualifying purchases from receipt submissions without forcing manual review on every claim.</p>
+                    </div>
+                    <div class="info-card">
+                        <h3>Internal Tooling</h3>
+                        <p>Use structured receipt extraction in admin tools, operations dashboards, or approval pipelines.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="developer" class="content-section alt-bg">
+            <div class="container">
+                <div class="section-head">
+                    <div>
+                        <p class="kicker">Developer Handoff</p>
+                        <h2>Give technical evaluators a fast next step.</h2>
+                    </div>
+                    <p class="section-desc">Auth, upload, parsed response, and the expected output structure in one compact flow.</p>
+                </div>
+                <div class="cards-2">
+                    <div class="info-card">
+                        <h3>Quick Implementation</h3>
+                        <p>One endpoint. Multipart form upload. Structured JSON response. Ready to route into your workflow immediately without owning the parsing infrastructure.</p>
+                        <div style="margin-top: 20px;">
+                            <button class="btn btn-primary" id="go-to-dev-btn">Open Developer Guide</button>
+                        </div>
+                    </div>
+                    <pre class="code-output">POST /v1/receipts/parse
+Authorization: Bearer {api_key}
+Content-Type: multipart/form-data
+
+{
+  "merchant": "SM Hypermarket",
+  "total": 1485.01,
+  "vat": 159.11,
+  "currency": "PHP",
+  "line_items": [...]
+}</pre>
+                </div>
+            </div>
+        </section>
+
+        <section id="faq" class="content-section">
+            <div class="container">
+                <div class="section-header">
+                    <h2>Frequently Asked Questions</h2>
+                </div>
+                <div class="faq-list">
+                    <details class="faq-item">
+                        <summary>Why not just use generic OCR?</summary>
+                        <p>Generic OCR can read characters, but engineering teams usually need stable field extraction, line items, tax handling, and structured outputs that plug directly into workflows — not just raw text.</p>
+                    </details>
+                    <details class="faq-item">
+                        <summary>Why not build this ourselves?</summary>
+                        <p>You can. The real issue is whether your team wants to own the long tail of maintenance, parser fixes, exception handling, and production reliability. A prototype is not the same as a production parser.</p>
+                    </details>
+                    <details class="faq-item">
+                        <summary>How do I start an evaluation?</summary>
+                        <p>Book a call and we'll walk you through testing with your own Philippine receipts — not just polished samples — so you can see real-world output before committing engineering time.</p>
+                    </details>
+                </div>
+            </div>
+        </section>
+
+        <section id="demo" class="content-section">
+            <div class="container">
+                <div class="section-head">
+                    <div>
+                        <p class="kicker">Try It Now</p>
+                        <h2>Upload a PH receipt and see structured output instantly.</h2>
+                    </div>
+                    <p class="section-desc">Upload a real Philippine receipt and the API will return structured JSON with merchant, totals, VAT, and line items.</p>
+                </div>
+                <div class="demo-interactive">
+                    <!-- Left: upload -->
+                    <div class="demo-col-upload">
+                        <div id="uploadZone" class="upload-zone">
+                            <div id="uploadZoneInner" class="upload-zone-inner">
+                                <p>Drag &amp; drop a receipt here, or</p>
+                                <button id="uploadBtn" class="btn btn-primary">Choose File</button>
+                                <input id="receiptFileInput" type="file" accept="image/jpeg,image/png,image/gif,image/webp,application/pdf" hidden>
+                            </div>
+                            <div id="receiptPreviewWrap" class="receipt-preview-wrap hidden">
+                                <img id="receiptPreviewImg" alt="Receipt preview">
+                                <button id="changeFileBtn" class="btn btn-secondary">Change File</button>
+                            </div>
+                        </div>
+                        <div class="demo-actions">
+                            <button id="extractBtn" class="btn btn-primary btn-large" style="width:100%">Extract Fields</button>
+                        </div>
+                    </div>
+                    <!-- Right: results -->
+                    <div class="demo-col-results">
+                        <div class="demo-results">
+                            <div id="resultsIdle">Upload a receipt and click <strong>Extract Fields</strong> to see parsed output.</div>
+                            <div id="demoLoading" class="hidden">Parsing receipt…</div>
+                            <div id="demoError" class="hidden">
+                                <p id="demoErrorMsg"></p>
+                                <button id="demoRetryBtn" class="btn btn-secondary">Try Again</button>
+                            </div>
+                            <div id="extractedFields" class="hidden">
+                                <div class="extraction-header">
+                                    <span class="extraction-badge">Extracted</span>
+                                    <button id="demoCopyBtn" class="btn btn-secondary">Copy JSON</button>
+                                </div>
+                                <div id="fieldsList" class="fields-list"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="cta" class="final-cta">
+            <div class="container">
+                <div class="cta-box">
+                    <h2>Start with your own PH receipts and see if this saves your team from owning the parsing stack.</h2>
+                    <p>Test with real receipts, inspect the output, then decide.</p>
+                    <div class="hero-cta">
+                        <a href="https://ghl.theoliviaapp.com/widget/booking/OutJazttbxCxoYSykQg8" class="btn btn-primary btn-large">Start Evaluation</a>
+                        <a href="../#demo" class="btn btn-outline-white btn-large">Talk to Team</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <footer>
+            <div class="container">
+                <div class="footer-grid">
+                    <div class="footer-col">
+                        <img src="../images/Olivia Connect_colored.svg" alt="Olivia Connect Logo" class="footer-logo">
+                        <p>Advanced AI-powered document processing technology for Philippine businesses.</p>
+                    </div>
+                    <div class="footer-col">
+                        <h4>Company</h4>
+                        <ul>
+                            <li><a href="/about">About Us</a></li>
+                            <li><a href="/blog">Blog</a></li>
+                            <li><a href="/faq">FAQ</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-col">
+                        <h4>Legal</h4>
+                        <ul>
+                            <li><a href="/privacy-policy">Privacy Policy</a></li>
+                            <li><a href="/terms-conditions">Terms &amp; Conditions</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="footer-bottom">
+                    <p>&copy; 2026 Olivia Technology Group. All rights reserved.</p>
+                </div>
+            </div>
+        </footer>
+
+    </div><!-- end #main -->
+
+
+    <!-- ===== DEVELOPER PAGE ===== -->
+    <div class="tab-page" id="dev">
+
+        <section class="hero">
+            <div class="container">
+                <div class="hero-grid">
+                    <div class="hero-content">
+                        <span class="eyebrow">Developer Guide</span>
+                        <h1>Receipt parsing your team can test in one sprint.</h1>
+                        <p class="hero-sub">Understand the API surface, response structure, and what engineering work disappears when you do not own the parsing stack internally.</p>
+                        <div class="hero-cta">
+                            <a href="#schema" class="btn btn-primary btn-large">View API Schema</a>
+                            <a href="#dev-cta" class="btn btn-secondary btn-large">Test with Your Receipts</a>
+                        </div>
+                    </div>
+                    <div class="demo-panel">
+                        <div class="demo-panel-head">
+                            <span>Node / Python quick-start</span>
+                            <span>Request → response</span>
+                        </div>
+                        <pre class="code-output"># Node.js
+const form = new FormData();
+form.append('file', receiptFile);
+
+const res = await fetch('/v1/receipts/parse', {
+  method: 'POST',
+  headers: {
+    Authorization: 'Bearer {api_key}'
+  },
+  body: form
+});
+
+# Python
+import requests
+resp = requests.post(
+  '/v1/receipts/parse',
+  headers={'Authorization': 'Bearer {api_key}'},
+  files={'file': open('receipt.jpg', 'rb')}
+)
+
+{
+  "merchant": "Mercury Drug",
+  "total": 910.00,
+  "vat": 97.50,
+  "line_items": [...]
+}</pre>
+                    </div>
+                </div>
+                <div class="objection-block">
+                    <div class="objection-main">
+                        <strong>Yes, your team can prototype this. A maintained production parser is a different commitment.</strong>
+                        <p>Internal builds create long-term ownership around parser failures, format drift, support escalations, QA, monitoring, and exception handling in production.</p>
+                    </div>
+                    <ul class="objection-bullets">
+                        <li>A prototype is not the same as a production parser.</li>
+                        <li>Format drift and edge cases become ongoing engineering work.</li>
+                        <li>Buying can be the faster engineering decision.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <div class="container">
+                <div class="section-head">
+                    <div>
+                        <p class="kicker">Quick-Start</p>
+                        <h2>Implement in four steps.</h2>
+                    </div>
+                    <p class="section-desc">Simple and scannable so dev leads can see how quickly a proof-of-value test can happen.</p>
+                </div>
+                <div class="cards-2">
+                    <div class="info-card">
+                        <h3>1. Authenticate</h3>
+                        <p>Bearer token or API key pattern. Low auth friction — straightforward to integrate into any stack without additional libraries.</p>
+                    </div>
+                    <div class="info-card">
+                        <h3>2. Upload Receipt</h3>
+                        <p>File upload via multipart form. Accepts JPG, PNG, and PDF. Typical payload is under 5 MB per receipt.</p>
+                    </div>
+                    <div class="info-card">
+                        <h3>3. Get Parsed JSON</h3>
+                        <p>Stable fields: merchant, line items, dates, totals, and VAT/tax values in a predictable, versioned schema that your team can rely on.</p>
+                    </div>
+                    <div class="info-card">
+                        <h3>4. Route into Workflow</h3>
+                        <p>Feed the response into approvals, reconciliation, reimbursements, or internal tools — no additional transformation needed.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="content-section alt-bg">
+            <div class="container">
+                <div class="section-head">
+                    <div>
+                        <p class="kicker">Production Concerns</p>
+                        <h2>What technical buyers actually worry about.</h2>
+                    </div>
+                    <p class="section-desc">Schema predictability, failures, retries, and what happens when receipts are messy or inconsistent.</p>
+                </div>
+                <div class="cards-3">
+                    <div class="info-card">
+                        <h3>Response Consistency</h3>
+                        <p>A stable shape for core fields so downstream engineering work is simpler and more predictable across all receipt types.</p>
+                    </div>
+                    <div class="info-card">
+                        <h3>Error &amp; Exception Handling</h3>
+                        <p>Failed or low-quality parses return clear status codes and messages your team can handle cleanly in production.</p>
+                    </div>
+                    <div class="info-card">
+                        <h3>Evaluation Path</h3>
+                        <p>Test with real PH receipts — not just ideal examples — before committing engineering roadmap time to any direction.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="schema" class="content-section">
+            <div class="container">
+                <div class="section-head">
+                    <div>
+                        <p class="kicker">Engineering Build vs. Buy</p>
+                        <h2>Make the technical trade-off explicit.</h2>
+                    </div>
+                    <p class="section-desc">Engineering ownership, not generic procurement language.</p>
+                </div>
+                <div class="table-wrap">
+                    <table class="compare-table">
+                        <thead>
+                            <tr>
+                                <th>Question</th>
+                                <th>Internal Build</th>
+                                <th>API Route</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Who owns parser failures?</td>
+                                <td>Your team patches misses, exceptions, and regressions.</td>
+                                <td>Platform maintenance burden is reduced significantly.</td>
+                            </tr>
+                            <tr>
+                                <td>Who handles format drift?</td>
+                                <td>Your team keeps updating logic, tests, and heuristics.</td>
+                                <td>Maintained service absorbs more of that ongoing change.</td>
+                            </tr>
+                            <tr>
+                                <td>What ships faster?</td>
+                                <td>Prototype may be fast; reliable rollout usually takes longer.</td>
+                                <td>Evaluation and rollout usually start faster.</td>
+                            </tr>
+                            <tr>
+                                <td>Where does engineering time go?</td>
+                                <td>OCR infrastructure and parser upkeep.</td>
+                                <td>Product workflows and differentiated business logic.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <section class="content-section alt-bg">
+            <div class="container">
+                <div class="section-header">
+                    <h2>Developer FAQ</h2>
+                </div>
+                <div class="faq-list">
+                    <details class="faq-item">
+                        <summary>Is this flexible enough for our workflow?</summary>
+                        <p>That is why we emphasize evaluation with your own receipts and structured output review — not just polished marketing claims. Test it against your real edge cases first.</p>
+                    </details>
+                    <details class="faq-item">
+                        <summary>When does building in-house make sense?</summary>
+                        <p>When deployment constraints, custom document logic, or full infrastructure control matter more than implementation speed and maintenance reduction.</p>
+                    </details>
+                    <details class="faq-item">
+                        <summary>How do we start a technical evaluation?</summary>
+                        <p>Inspect the schema, run a sample request against your real PH receipts, then contact the team if you need a deeper guided evaluation before making a decision.</p>
+                    </details>
+                </div>
+            </div>
+        </section>
+
+        <section id="dev-cta" class="final-cta">
+            <div class="container">
+                <div class="cta-box">
+                    <h2>Let engineers review the output before they commit roadmap time to building it.</h2>
+                    <p>Inspect the schema, test on real receipts, then contact the team if deeper evaluation is needed.</p>
+                    <div class="hero-cta">
+                        <a href="#schema" class="btn btn-primary btn-large">Review Schema</a>
+                        <a href="https://ghl.theoliviaapp.com/widget/booking/OutJazttbxCxoYSykQg8" class="btn btn-outline-white btn-large">Request Evaluation</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <footer>
+            <div class="container">
+                <div class="footer-grid">
+                    <div class="footer-col">
+                        <img src="../images/Olivia Connect_colored.svg" alt="Olivia Connect" class="footer-logo">
+                        <p>Advanced AI-powered document processing technology for Philippine businesses.</p>
+                    </div>
+                    <div class="footer-col">
+                        <h4>Company</h4>
+                        <ul>
+                            <li><a href="/about">About Us</a></li>
+                            <li><a href="/blog">Blog</a></li>
+                            <li><a href="/faq">FAQ</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-col">
+                        <h4>Legal</h4>
+                        <ul>
+                            <li><a href="/privacy-policy">Privacy Policy</a></li>
+                            <li><a href="/terms-conditions">Terms &amp; Conditions</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="footer-bottom">
+                    <p>&copy; 2026 Olivia Technology Group. All rights reserved.</p>
+                </div>
+            </div>
+        </footer>
+
+    </div><!-- end #dev -->
+
+    <!-- ===== BLOG TAB PAGE ===== -->
+    <div class="tab-page" id="blog">
+
+        <section class="blog-tab-section">
+            <div class="container">
+                <div class="blog-tab-header">
+                    <h2>From the Blog</h2>
+                    <a href="/blog" class="btn btn-secondary">View all posts →</a>
+                </div>
+                <div id="blogTabGrid" class="blog-grid blog-grid-tab">
+                    <div class="blog-skeleton"></div>
+                    <div class="blog-skeleton"></div>
+                    <div class="blog-skeleton"></div>
+                </div>
+                <p id="blogTabEmpty" class="blog-empty hidden">No posts published yet. Check back soon.</p>
+            </div>
+        </section>
+
+    </div><!-- end #blog -->
+
+    <script>
+      window.LIPTECH_CONFIG = {
+        endpoint: '/api/parse-invoice'
+      };
+    </script>
+    <script src="./script.js"></script>
+    <script src="/supabase-config.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+      (function() {
+        if (!window.SUPABASE_URL) return;
+
+        var sb = supabase.createClient(window.SUPABASE_URL, window.SUPABASE_ANON);
+        var loaded = false;
+
+        function escHtml(str) {
+          return String(str).replace(/[&<>"']/g, function(c) {
+            return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
+          });
+        }
+
+        function renderBlogTab(posts) {
+          var grid  = document.getElementById('blogTabGrid');
+          var empty = document.getElementById('blogTabEmpty');
+          if (!posts || !posts.length) {
+            grid.innerHTML = '';
+            empty.classList.remove('hidden');
+            return;
+          }
+          empty.classList.add('hidden');
+          grid.innerHTML = posts.map(function(post) {
+            var date = new Date(post.created_at).toLocaleDateString('en-PH', { year: 'numeric', month: 'long', day: 'numeric' });
+            var excerpt = post.body ? post.body.replace(/<[^>]+>/g, '').slice(0, 130) + '…' : '';
+            var hero = post.hero_image_url
+              ? '<img src="' + escHtml(post.hero_image_url) + '" alt="' + escHtml(post.title) + '" class="blog-card-hero">'
+              : '<div class="blog-card-hero blog-card-hero-placeholder"></div>';
+            var tags = (post.tags || []).map(function(t) { return '<span class="blog-tag">' + escHtml(t) + '</span>'; }).join('');
+            return '<a href="/blog/' + escHtml(post.slug) + '" class="blog-card">' +
+              hero +
+              '<div class="blog-card-body">' +
+              (tags ? '<div class="blog-card-tags">' + tags + '</div>' : '') +
+              '<h3 class="blog-card-title">' + escHtml(post.title) + '</h3>' +
+              '<p class="blog-card-excerpt">' + escHtml(excerpt) + '</p>' +
+              '<span class="blog-card-date">' + date + '</span>' +
+              '</div></a>';
+          }).join('');
+        }
+
+        async function loadBlogTab() {
+          if (loaded) return;
+          loaded = true;
+          var res = await sb
+            .from('blog_posts')
+            .select('id, title, slug, tags, hero_image_url, body, created_at')
+            .eq('status', 'published')
+            .order('created_at', { ascending: false })
+            .limit(3);
+          renderBlogTab(res.data || []);
+        }
+
+        // Load when blog tab is first activated
+        document.querySelectorAll('.page-tab').forEach(function(btn) {
+          btn.addEventListener('click', function() {
+            if (btn.dataset.page === 'blog') loadBlogTab();
+          });
+        });
+      })();
+    </script>
+</body>
+</html>

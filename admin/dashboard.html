@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard — Olivia Connect Admin</title>
+  <link rel="icon" type="image/png" href="/images/olivia.png">
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="admin-body">
+
+  <div class="admin-layout">
+    <header class="admin-topbar">
+      <div class="admin-topbar-inner">
+        <a href="/admin/dashboard.html" class="admin-logo">
+          <img src="/images/Olivia Connect_colored.svg" alt="Olivia Connect" height="28">
+          <span>Admin</span>
+        </a>
+        <div class="admin-topbar-actions">
+          <a href="/admin/editor.html" class="btn btn-primary btn-sm">+ New Post</a>
+          <button id="signOutBtn" class="btn btn-ghost btn-sm">Sign Out</button>
+        </div>
+      </div>
+    </header>
+
+    <main class="admin-main container">
+      <div class="admin-page-header">
+        <h1>Blog Posts</h1>
+        <a href="/admin/editor.html" class="btn btn-primary">+ New Post</a>
+      </div>
+
+      <div class="admin-table-wrap">
+        <table class="admin-table" id="postsTable">
+          <thead>
+            <tr>
+              <th>Title</th>
+              <th>Status</th>
+              <th>Tags</th>
+              <th>Date</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="postsBody">
+            <tr><td colspan="5" class="table-loading">Loading posts…</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </main>
+  </div>
+
+  <!-- Confirm delete modal -->
+  <div id="deleteModal" class="modal-overlay hidden" role="dialog" aria-modal="true">
+    <div class="modal-card">
+      <h3>Delete post?</h3>
+      <p>This action cannot be undone. The post will be permanently removed.</p>
+      <div class="modal-actions">
+        <button id="deleteCancel" class="btn btn-secondary">Cancel</button>
+        <button id="deleteConfirm" class="btn btn-danger">Delete</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="/supabase-config.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    const sb = supabase.createClient(window.SUPABASE_URL, window.SUPABASE_ANON);
+
+    // Auth guard
+    sb.auth.getSession().then(({ data }) => {
+      if (!data.session) location.replace('/admin/index.html');
+    });
+
+    document.getElementById('signOutBtn').addEventListener('click', async () => {
+      await sb.auth.signOut();
+      location.replace('/admin/index.html');
+    });
+
+    let pendingDeleteId = null;
+
+    async function loadPosts() {
+      const { data: posts, error } = await sb
+        .from('blog_posts')
+        .select('id, title, slug, status, tags, created_at')
+        .order('created_at', { ascending: false });
+
+      const tbody = document.getElementById('postsBody');
+      if (error || !posts) {
+        tbody.innerHTML = '<tr><td colspan="5" class="table-error">Failed to load posts.</td></tr>';
+        return;
+      }
+      if (!posts.length) {
+        tbody.innerHTML = '<tr><td colspan="5" class="table-empty">No posts yet. <a href="/admin/editor.html">Create one →</a></td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = posts.map(p => {
+        const date = new Date(p.created_at).toLocaleDateString('en-PH', { year: 'numeric', month: 'short', day: 'numeric' });
+        const tags = (p.tags || []).map(t => `<span class="blog-tag blog-tag-sm">${escHtml(t)}</span>`).join(' ');
+        const statusClass = p.status === 'published' ? 'status-published' : 'status-draft';
+        const toggleLabel = p.status === 'published' ? 'Set Draft' : 'Publish';
+        return `<tr data-id="${p.id}">
+          <td><a href="/admin/editor.html?id=${p.id}" class="post-title-link">${escHtml(p.title)}</a></td>
+          <td><span class="status-badge ${statusClass}">${escHtml(p.status)}</span></td>
+          <td>${tags || '<span class="text-muted">—</span>'}</td>
+          <td class="text-muted">${date}</td>
+          <td class="table-actions">
+            <a href="/admin/editor.html?id=${p.id}" class="btn btn-ghost btn-sm">Edit</a>
+            <button class="btn btn-ghost btn-sm toggle-status-btn" data-id="${p.id}" data-status="${p.status}">${toggleLabel}</button>
+            <button class="btn btn-danger-ghost btn-sm delete-btn" data-id="${p.id}">Delete</button>
+          </td>
+        </tr>`;
+      }).join('');
+
+      // Bind row actions
+      tbody.querySelectorAll('.toggle-status-btn').forEach(btn => {
+        btn.addEventListener('click', () => toggleStatus(btn.dataset.id, btn.dataset.status));
+      });
+      tbody.querySelectorAll('.delete-btn').forEach(btn => {
+        btn.addEventListener('click', () => promptDelete(btn.dataset.id));
+      });
+    }
+
+    async function toggleStatus(id, currentStatus) {
+      const newStatus = currentStatus === 'published' ? 'draft' : 'published';
+      await sb.from('blog_posts').update({ status: newStatus }).eq('id', id);
+      await loadPosts();
+    }
+
+    function promptDelete(id) {
+      pendingDeleteId = id;
+      document.getElementById('deleteModal').classList.remove('hidden');
+    }
+
+    document.getElementById('deleteCancel').addEventListener('click', () => {
+      pendingDeleteId = null;
+      document.getElementById('deleteModal').classList.add('hidden');
+    });
+
+    document.getElementById('deleteConfirm').addEventListener('click', async () => {
+      if (!pendingDeleteId) return;
+      await sb.from('blog_posts').delete().eq('id', pendingDeleteId);
+      pendingDeleteId = null;
+      document.getElementById('deleteModal').classList.add('hidden');
+      await loadPosts();
+    });
+
+    function escHtml(str) {
+      return String(str).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+    }
+
+    loadPosts();
+  </script>
+</body>
+</html>

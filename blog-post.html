@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Meta tags injected by Cloudflare Pages Function for SEO; JS also sets them as fallback -->
+  <title id="pageTitle">Loading… — Olivia Connect Blog</title>
+  <meta name="description" id="metaDesc" content="">
+  <meta property="og:title" id="ogTitle" content="">
+  <meta property="og:description" id="ogDesc" content="">
+  <meta property="og:image" id="ogImage" content="">
+  <meta property="og:type" content="article">
+  <link rel="icon" type="image/png" href="/images/olivia.png">
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <nav class="navbar">
+    <div class="container">
+      <div class="logo">
+        <a href="/"><img src="/images/Olivia Connect_colored.svg" alt="Olivia Connect Logo"></a>
+      </div>
+      <div class="nav-links">
+        <a href="/#overview">Overview</a>
+        <a href="/#use-cases">Use Cases</a>
+        <a href="/#developer">Developer</a>
+        <a href="/blog" class="nav-active">Blog</a>
+      </div>
+      <div class="nav-buttons">
+        <a href="/#cta" class="btn btn-primary">Book Evaluation</a>
+      </div>
+      <button class="mobile-menu-btn" aria-label="Toggle menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <div id="postLoading" class="blog-post-loading">
+    <div class="container">
+      <div class="blog-skeleton blog-skeleton-title"></div>
+      <div class="blog-skeleton blog-skeleton-hero"></div>
+      <div class="blog-skeleton"></div>
+      <div class="blog-skeleton"></div>
+      <div class="blog-skeleton blog-skeleton-sm"></div>
+    </div>
+  </div>
+
+  <article id="postArticle" class="blog-post-article hidden">
+    <div class="blog-post-header">
+      <div class="container">
+        <div id="postTags" class="blog-card-tags"></div>
+        <h1 id="postTitle"></h1>
+        <div class="blog-post-meta">
+          <span id="postDate"></span>
+        </div>
+      </div>
+    </div>
+    <div class="blog-post-hero-wrap">
+      <img id="postHero" src="" alt="" class="blog-post-hero hidden">
+    </div>
+    <div class="container">
+      <div id="postBody" class="blog-post-body ql-editor"></div>
+      <div class="blog-post-footer">
+        <a href="/blog" class="btn btn-secondary">← Back to Blog</a>
+      </div>
+    </div>
+  </article>
+
+  <div id="postNotFound" class="blog-post-notfound hidden">
+    <div class="container">
+      <h2>Post not found.</h2>
+      <p>This post may have been removed or the URL is incorrect.</p>
+      <a href="/blog" class="btn btn-primary">← Back to Blog</a>
+    </div>
+  </div>
+
+  <footer>
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-col">
+          <img src="/images/Olivia Connect_colored.svg" alt="Olivia Connect" class="footer-logo">
+          <p>Advanced AI-powered document processing for Philippine businesses.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Company</h4>
+          <ul>
+            <li><a href="/about">About Us</a></li>
+            <li><a href="/blog">Blog</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Legal</h4>
+          <ul>
+            <li><a href="/privacy-policy">Privacy Policy</a></li>
+            <li><a href="/terms-conditions">Terms &amp; Conditions</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2026 Olivia Technology Group. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Quill CSS for rendering rich text body -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/quill@2/dist/quill.snow.css">
+
+  <script src="/supabase-config.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    const sb = supabase.createClient(window.SUPABASE_URL, window.SUPABASE_ANON);
+
+    // Extract slug from URL: /blog/:slug
+    const slug = location.pathname.replace(/^\/blog\/?/, '').replace(/\/$/, '');
+
+    async function loadPost() {
+      if (!slug) {
+        showNotFound();
+        return;
+      }
+
+      const { data: post, error } = await sb
+        .from('blog_posts')
+        .select('*')
+        .eq('slug', slug)
+        .eq('status', 'published')
+        .single();
+
+      if (error || !post) {
+        showNotFound();
+        return;
+      }
+
+      // Inject meta tags for crawlers that execute JS
+      document.getElementById('pageTitle').textContent = `${post.title} — Olivia Connect Blog`;
+      const excerpt = post.body ? post.body.replace(/<[^>]+>/g, '').slice(0, 160) : '';
+      setMeta('metaDesc', excerpt);
+      setMetaProp('ogTitle', post.title);
+      setMetaProp('ogDesc', excerpt);
+      if (post.hero_image_url) setMetaProp('ogImage', post.hero_image_url);
+
+      // Render post
+      const date = new Date(post.created_at).toLocaleDateString('en-PH', { year: 'numeric', month: 'long', day: 'numeric' });
+      document.getElementById('postTitle').textContent = post.title;
+      document.getElementById('postDate').textContent = date;
+      document.getElementById('postBody').innerHTML = post.body || '';
+
+      if (post.hero_image_url) {
+        const hero = document.getElementById('postHero');
+        hero.src = post.hero_image_url;
+        hero.alt = post.title;
+        hero.classList.remove('hidden');
+      }
+
+      const tags = (post.tags || []).map(t => `<span class="blog-tag">${escHtml(t)}</span>`).join('');
+      document.getElementById('postTags').innerHTML = tags;
+
+      document.getElementById('postLoading').classList.add('hidden');
+      document.getElementById('postArticle').classList.remove('hidden');
+    }
+
+    function showNotFound() {
+      document.getElementById('postLoading').classList.add('hidden');
+      document.getElementById('postNotFound').classList.remove('hidden');
+    }
+
+    function setMeta(id, content) {
+      const el = document.getElementById(id);
+      if (el) el.setAttribute('content', content);
+    }
+
+    function setMetaProp(id, content) {
+      const el = document.getElementById(id);
+      if (el) el.setAttribute('content', content);
+    }
+
+    function escHtml(str) {
+      return String(str).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+    }
+
+    loadPost();
+  </script>
+</body>
+</html>
