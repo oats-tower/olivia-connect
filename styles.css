@@ -1079,6 +1079,12 @@ footer {
 .blog-post-body code { font-family: 'IBM Plex Mono', monospace; font-size: .9em; }
 .blog-post-body blockquote { border-left: 3px solid var(--primary-color); margin: 0 0 1.2em; padding: 8px 16px; color: var(--text-secondary); }
 
+/* Tables from quill-table-better */
+.blog-post-body table { border-collapse: collapse; width: 100%; margin: 0 0 1.4em; font-size: .95em; }
+.blog-post-body table td,
+.blog-post-body table th { border: 1px solid var(--border-color); padding: 8px 12px; vertical-align: top; }
+.blog-post-body table tr:first-child td { background: #f7f7f5; font-weight: 600; }
+
 /* Quill 2 code blocks — stored as .ql-code-block-container, not <pre> */
 .blog-post-body .ql-code-block-container {
   background: #1a1a2e;

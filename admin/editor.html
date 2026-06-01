@@ -7,6 +7,7 @@
   <link rel="icon" type="image/png" href="/images/olivia.png">
   <link rel="stylesheet" href="/styles.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/quill@2/dist/quill.snow.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/quill-table-better@1/dist/quill-table-better.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
@@ -63,6 +64,11 @@
                   <button class="ql-image"></button>
                 </span>
                 <span class="ql-formats">
+                  <button class="ql-table-better" title="Insert table">
+                    <svg viewBox="0 0 18 18"><rect class="ql-stroke" height="12" width="12" x="3" y="3"></rect><line class="ql-stroke" x1="3" x2="15" y1="9" y2="9"></line><line class="ql-stroke" x1="9" x2="9" y1="3" y2="15"></line></svg>
+                  </button>
+                </span>
+                <span class="ql-formats">
                   <button class="ql-clean"></button>
                 </span>
               </div>
@@ -117,6 +123,7 @@
   <script src="/supabase-config.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="https://cdn.jsdelivr.net/npm/quill@2/dist/quill.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/quill-table-better@1/dist/quill-table-better.js"></script>
   <script>
     const sb = supabase.createClient(window.SUPABASE_URL, window.SUPABASE_ANON);
 
@@ -132,13 +139,19 @@
     });
 
     // ── Quill setup ──
+    Quill.register({ 'modules/table-better': QuillTableBetter }, true);
+
     const quill = new Quill('#quillEditor', {
       theme: 'snow',
       placeholder: 'Write your post here…',
       modules: {
+        'table-better': {},
         toolbar: {
           container: '#quillToolbar',
-          handlers: { image: imageUploadHandler }
+          handlers: {
+            image: imageUploadHandler,
+            'table-better': () => quill.getModule('table-better').insertTable(3, 3)
+          }
         }
       }
     });
