@@ -39,7 +39,35 @@
 
           <div class="form-group">
             <label>Body</label>
-            <div id="quillEditor" class="quill-editor-wrap"></div>
+            <div class="quill-outer-wrap">
+              <div id="quillToolbar" class="quill-toolbar-sticky">
+                <span class="ql-formats">
+                  <select class="ql-header"><option value="1"></option><option value="2"></option><option value="3"></option><option selected></option></select>
+                </span>
+                <span class="ql-formats">
+                  <button class="ql-bold"></button>
+                  <button class="ql-italic"></button>
+                  <button class="ql-underline"></button>
+                  <button class="ql-strike"></button>
+                </span>
+                <span class="ql-formats">
+                  <button class="ql-blockquote"></button>
+                  <button class="ql-code-block"></button>
+                </span>
+                <span class="ql-formats">
+                  <button class="ql-list" value="ordered"></button>
+                  <button class="ql-list" value="bullet"></button>
+                </span>
+                <span class="ql-formats">
+                  <button class="ql-link"></button>
+                  <button class="ql-image"></button>
+                </span>
+                <span class="ql-formats">
+                  <button class="ql-clean"></button>
+                </span>
+              </div>
+              <div id="quillEditor" class="quill-editor-body"></div>
+            </div>
           </div>
         </div>
 
@@ -109,18 +137,13 @@
       placeholder: 'Write your post here…',
       modules: {
         toolbar: {
-          container: [
-            [{ header: [1, 2, 3, false] }],
-            ['bold', 'italic', 'underline', 'strike'],
-            ['blockquote', 'code-block'],
-            [{ list: 'ordered' }, { list: 'bullet' }],
-            ['link', 'image'],
-            ['clean']
-          ],
+          container: '#quillToolbar',
           handlers: { image: imageUploadHandler }
         }
       }
     });
+
+    // (handlers defined inline above, image handler below)
 
     async function imageUploadHandler() {
       const input = document.createElement('input');
