@@ -1267,7 +1267,14 @@ footer {
 .editor-title-input:focus { border-color: var(--primary-color); }
 
 .quill-editor-wrap { width: 100%; box-sizing: border-box; background: #fff; border: 1.5px solid var(--border-color); border-radius: 8px; overflow: hidden; }
-.quill-editor-wrap .ql-toolbar { border: none; border-bottom: 1px solid var(--border-color); }
+.quill-editor-wrap .ql-toolbar {
+  border: none;
+  border-bottom: 1px solid var(--border-color);
+  position: sticky;
+  top: 56px; /* height of .admin-topbar */
+  z-index: 10;
+  background: #fff;
+}
 .quill-editor-wrap .ql-container { border: none; font-size: 1rem; font-family: inherit; }
 .quill-editor-wrap .ql-editor { min-height: 520px; }
 
