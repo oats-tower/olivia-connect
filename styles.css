@@ -1079,7 +1079,24 @@ footer {
 .blog-post-body code { font-family: 'IBM Plex Mono', monospace; font-size: .9em; }
 .blog-post-body blockquote { border-left: 3px solid var(--primary-color); margin: 0 0 1.2em; padding: 8px 16px; color: var(--text-secondary); }
 
-.blog-post-footer { max-width: 760px; margin: 0 auto 80px; padding-top: 32px; border-top: 1px solid var(--border-color); }
+/* Quill 2 code blocks — stored as .ql-code-block-container, not <pre> */
+.blog-post-body .ql-code-block-container {
+  background: #1a1a2e;
+  color: #e2e8f0;
+  border-radius: 10px;
+  padding: 16px 20px;
+  margin: 0 0 1.2em;
+  overflow-x: auto;
+  font-size: .9em;
+}
+.blog-post-body .ql-code-block {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: .9em;
+  line-height: 1.6;
+  white-space: pre;
+  counter-increment: none;
+}
+
 
 .blog-post-notfound { text-align: center; padding: 220px 24px 120px; }
 .blog-post-notfound h2 { font-size: 2rem; font-weight: 700; margin-bottom: 12px; }
