@@ -87,7 +87,12 @@ export async function onRequestPost(context) {
     }
 
     console.log(`[poll] Job queued, reference=${reference}. Polling for result...`);
-    const pollUrl = `https://olivia-connect.com/api/v1/parse_inv/${reference}.json`;
+    // Try two candidate poll URL patterns; log the first 404 body to identify correct format.
+    const pollUrls = [
+      `https://olivia-connect.com/api/v1/parse_inv/${reference}.json`,
+      `https://olivia-connect.com/api/v1/invoices/${reference}.json`,
+      `https://olivia-connect.com/api/v1/jobs/${reference}.json`,
+    ];
     const MAX_ATTEMPTS = 15;
     const DELAY_MS = 2000;
 
@@ -95,19 +100,24 @@ export async function onRequestPost(context) {
       await new Promise(resolve => setTimeout(resolve, DELAY_MS));
       console.log(`[poll] Attempt ${attempt}/${MAX_ATTEMPTS}...`);
 
-      const pollRes = await fetch(pollUrl, {
-        headers: {
-          'Authorization': `Bearer ${accessToken}`,
-          'Accept': 'application/json',
-        },
-      });
-
-      if (!pollRes.ok) {
-        console.warn(`[poll] Non-200 status: ${pollRes.status}`);
-        continue;
+      let pollRes, pollUrl;
+      for (const url of pollUrls) {
+        pollRes = await fetch(url, {
+          headers: {
+            'Authorization': `Bearer ${accessToken}`,
+            'Accept': 'application/json',
+          },
+        });
+        if (pollRes.ok) { pollUrl = url; break; }
+        const body = await pollRes.text();
+        console.warn(`[poll] ${url} → ${pollRes.status}: ${body.slice(0, 200)}`);
+        pollRes = null;
       }
 
+      if (!pollRes) continue;
+
       const pollData = await pollRes.json();
+      console.log(`[poll] ${pollUrl} → ${JSON.stringify(pollData).slice(0, 300)}`);
 
       // Result is ready when it has actual invoice fields.
       if (pollData.merchant !== undefined || pollData.invoice_number !== undefined) {
