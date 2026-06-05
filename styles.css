@@ -279,10 +279,12 @@ img { max-width: 100%; height: auto; }
   padding: 16px;
   font-family: 'IBM Plex Mono', 'Courier New', monospace;
   font-size: 12px;
-  overflow: auto;
+  overflow-x: auto;
+  overflow-y: visible;
   white-space: pre;
   min-height: 260px;
   line-height: 1.6;
+  max-width: 100%;
 }
 
 /* ── Objection Block ── */
@@ -675,6 +677,11 @@ footer {
     grid-template-columns: 1fr;
   }
 
+  /* Prevent wide code blocks from spilling beyond viewport */
+  .hero-grid > *,
+  .demo-panel { min-width: 0; max-width: 100%; }
+  .demo-panel { overflow-x: hidden; }
+
   .demo-panel { margin-top: 20px; }
   .section-desc { margin-top: 8px; }
 
@@ -689,9 +696,15 @@ footer {
 
   .mobile-menu-btn { display: flex; }
 
-  .hero { padding: 160px 0 60px; }
+  /* Shrink navbar height on mobile */
+  .navbar { padding: 12px 0; }
+  .logo img { height: 56px; }
 
+  /* Tabs bar: stick just below the ~80px mobile navbar */
   .page-tabs-bar { top: 80px; }
+  .page-tabs-bar .container { padding-top: 10px; }
+
+  .hero { padding: 160px 0 60px; }
 
   .cards-3,
   .cards-2 { grid-template-columns: 1fr; }
@@ -1084,6 +1097,7 @@ footer {
 .blog-post-body table td,
 .blog-post-body table th { border: 1px solid var(--border-color); padding: 8px 12px; vertical-align: top; }
 .blog-post-body table tr:first-child td { background: #f7f7f5; font-weight: 600; }
+.blog-post-body img { max-width: 100%; height: auto; }
 
 /* Quill 2 code blocks — stored as .ql-code-block-container, not <pre> */
 .blog-post-body .ql-code-block-container {
@@ -1203,7 +1217,7 @@ footer {
 .admin-page-header h1 { font-size: 1.6rem; font-weight: 800; margin: 0; }
 
 /* Table */
-.admin-table-wrap { background: #fff; border: 1px solid var(--border-color); border-radius: 12px; overflow: hidden; }
+.admin-table-wrap { background: #fff; border: 1px solid var(--border-color); border-radius: 12px; overflow-x: auto; }
 .admin-table { width: 100%; border-collapse: collapse; font-size: .9rem; }
 .admin-table th {
   background: #fafaf8;
@@ -1341,5 +1355,19 @@ footer {
   .blog-listing-header h1 { font-size: 1.7rem; }
   .blog-post-header h1    { font-size: 1.7rem; }
   .admin-login-card { padding: 32px 20px; }
+
+  /* Tables — horizontal scroll on mobile */
+  .blog-post-body table { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .compare-table td:first-child { white-space: normal; }
+
+  /* Field rows — stack label above value */
+  .field-row { grid-template-columns: 1fr; gap: 2px; }
+  .field-label { padding-top: 0; }
+
+  /* Admin dashboard — stack header */
+  .admin-page-header { flex-direction: column; align-items: flex-start; gap: 12px; }
+
+  /* Blog post body padding */
+  .blog-post-body { font-size: 1rem; }
 }
 
