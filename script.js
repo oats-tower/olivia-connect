@@ -120,7 +120,6 @@ document.addEventListener('DOMContentLoaded', function () {
     const demoLoading     = document.getElementById('demoLoading');
     const demoError       = document.getElementById('demoError');
     const demoErrorMsg    = document.getElementById('demoErrorMsg');
-    const demoRetryBtn    = document.getElementById('demoRetryBtn');
     const extractedFields = document.getElementById('extractedFields');
     const fieldsList      = document.getElementById('fieldsList');
     const demoCopyBtn     = document.getElementById('demoCopyBtn');
@@ -168,10 +167,10 @@ document.addEventListener('DOMContentLoaded', function () {
     function handleFile(file) {
       if (!file) return;
       // Basic type check
-      const allowed = ['image/jpeg','image/png','image/gif','image/webp','application/pdf'];
+      const allowed = ['image/jpeg','image/png','image/gif','image/webp','image/heic','image/heif'];
       if (!allowed.includes(file.type)) {
         showPanel('demoError');
-        demoErrorMsg.textContent = 'Unsupported file type. Please upload a JPG, PNG, or PDF.';
+        demoErrorMsg.textContent = 'Unsupported file type. Please upload a JPG, PNG, HEIC, or other image file.';
         return;
       }
       if (file.size > 10 * 1024 * 1024) {
@@ -226,9 +225,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Extract
     extractBtn.addEventListener('click', runExtraction);
-    demoRetryBtn.addEventListener('click', function () {
-      if (currentFile) runExtraction();
-    });
 
     const MOCK_DATA = {
       merchant:           'JOLLIBEE FOODS CORPORATION',

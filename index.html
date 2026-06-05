@@ -307,7 +307,7 @@ Content-Type: multipart/form-data
                             <div id="uploadZoneInner" class="upload-zone-inner">
                                 <p>Drag &amp; drop a receipt here, or</p>
                                 <button id="uploadBtn" class="btn btn-primary">Choose File</button>
-                                <input id="receiptFileInput" type="file" accept="image/jpeg,image/png,image/gif,image/webp,application/pdf" hidden>
+                                <input id="receiptFileInput" type="file" accept="image/jpeg,image/png,image/gif,image/webp,image/heic,image/heif" hidden>
                             </div>
                             <div id="receiptPreviewWrap" class="receipt-preview-wrap hidden">
                                 <img id="receiptPreviewImg" alt="Receipt preview">
@@ -323,9 +323,11 @@ Content-Type: multipart/form-data
                         <div class="demo-results">
                             <div id="resultsIdle">Upload a receipt and click <strong>Extract Fields</strong> to see parsed output.</div>
                             <div id="demoLoading" class="hidden">Parsing receipt…</div>
-                            <div id="demoError" class="hidden">
-                                <p id="demoErrorMsg"></p>
-                                <button id="demoRetryBtn" class="btn btn-secondary">Try Again</button>
+                            <div id="demoError" class="demo-error hidden">
+                                <div class="demo-error-icon">
+                                  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                                </div>
+                                <p id="demoErrorMsg" class="demo-error-msg"></p>
                             </div>
                             <div id="extractedFields" class="hidden">
                                 <div class="extraction-header">
