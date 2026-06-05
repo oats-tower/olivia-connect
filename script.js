@@ -31,6 +31,18 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
+  // Button in dev tab that switches to main tab and scrolls to demo
+  const goToDemoBtn = document.getElementById('go-to-demo-btn');
+  if (goToDemoBtn) {
+    goToDemoBtn.addEventListener('click', function () {
+      switchTab('main');
+      setTimeout(function () {
+        const demo = document.getElementById('demo');
+        if (demo) demo.scrollIntoView({ behavior: 'smooth' });
+      }, 100);
+    });
+  }
+
   // ── Mobile menu ──
   const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
   const navLinks = document.querySelector('.nav-links');
