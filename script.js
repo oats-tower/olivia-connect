@@ -234,8 +234,8 @@ document.addEventListener('DOMContentLoaded', function () {
       const endpoint = cfg.endpoint || '/api/liptech-extract';
       const apiKey   = cfg.apiKey   || null;
 
-      console.log('[LIPTech] config:', { apiKey: apiKey ? apiKey.slice(0,20) + '…' : '(empty)', endpoint: endpoint });
-      console.log('[LIPTech] mock mode:', isMockMode());
+      // console.log('[LIPTech] config:', { apiKey: apiKey ? apiKey.slice(0,20) + '…' : '(empty)', endpoint: endpoint });
+      // console.log('[LIPTech] mock mode:', isMockMode());
 
       showPanel('demoLoading');
 
