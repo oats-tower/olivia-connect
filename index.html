@@ -4,11 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Olivia Connect — PH Receipt OCR for Engineering Teams</title>
-    <link rel="icon" type="image/png" href="../images/olivia.png">
+    <link rel="icon" type="image/svg+xml" href="../images/OC logo only.svg">
     <link rel="stylesheet" href="./styles.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-N67CXSQ7P0"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-N67CXSQ7P0');
+    </script>
 </head>
 <body>
 
@@ -25,7 +33,7 @@
                 <a href="#faq">FAQ</a>
             </div>
             <div class="nav-buttons">
-                <a href="https://ghl.theoliviaapp.com/widget/booking/OutJazttbxCxoYSykQg8" class="btn btn-primary" target="_blank" rel="noopener">Book a Call</a>
+                <a href="https://ghl.theoliviaapp.com/widget/booking/OutJazttbxCxoYSykQg8" class="btn btn-primary" target="_blank" rel="noopener" onclick="gtag('event', 'book_call_click');">Book a Call</a>
             </div>
             <button class="mobile-menu-btn" aria-label="Toggle menu">
                 <span></span><span></span><span></span>
@@ -54,7 +62,7 @@
                         <p class="hero-sub">Extract merchant, totals, VAT, dates, and line items from Philippine receipts and return workflow-ready JSON your product can use immediately.</p>
                         <div class="hero-cta">
                             <a href="#demo" class="btn btn-primary btn-large">Try Sample Receipt</a>
-                            <a href="https://ghl.theoliviaapp.com/widget/booking/OutJazttbxCxoYSykQg8" class="btn btn-secondary btn-large" target="_blank" rel="noopener">Book a Call</a>
+                            <a href="https://ghl.theoliviaapp.com/widget/booking/OutJazttbxCxoYSykQg8" class="btn btn-secondary btn-large" target="_blank" rel="noopener" onclick="gtag('event', 'book_call_click');">Book a Call</a>
                         </div>
                     </div>
                     <div class="demo-panel">
@@ -315,7 +323,7 @@ Content-Type: multipart/form-data
                             </div>
                         </div>
                         <div class="demo-actions">
-                            <button id="extractBtn" class="btn btn-primary btn-large" style="width:100%">Extract Fields</button>
+                            <button id="extractBtn" class="btn btn-primary btn-large" style="width:100%" onclick="gtag('event', 'demo_extract_fields');">Extract Fields</button>
                         </div>
                     </div>
                     <!-- Right: results -->
@@ -348,7 +356,7 @@ Content-Type: multipart/form-data
                     <h2>Start with your own PH receipts and see if this saves your team from owning the parsing stack.</h2>
                     <p>Test with real receipts, inspect the output, then decide.</p>
                     <div class="hero-cta">
-                        <a href="https://ghl.theoliviaapp.com/widget/booking/OutJazttbxCxoYSykQg8" class="btn btn-primary btn-large" target="_blank" rel="noopener">Book a Call</a>
+                        <a href="https://ghl.theoliviaapp.com/widget/booking/OutJazttbxCxoYSykQg8" class="btn btn-primary btn-large" target="_blank" rel="noopener" onclick="gtag('event', 'book_call_click');">Book a Call</a>
                     </div>
                 </div>
             </div>
@@ -577,7 +585,7 @@ resp = requests.post(
                     <p>Test on real receipts, then contact the team if deeper evaluation is needed.</p>
                     <div class="hero-cta">
                         <button id="go-to-demo-btn-cta" class="btn btn-outline-white btn-large">Test with Your Receipts</button>
-                        <a href="https://ghl.theoliviaapp.com/widget/booking/OutJazttbxCxoYSykQg8" class="btn btn-primary btn-large" target="_blank" rel="noopener">Book a Call</a>
+                        <a href="https://ghl.theoliviaapp.com/widget/booking/OutJazttbxCxoYSykQg8" class="btn btn-primary btn-large" target="_blank" rel="noopener" onclick="gtag('event', 'book_call_click');">Book a Call</a>
                     </div>
                 </div>
             </div>
